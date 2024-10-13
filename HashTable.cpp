@@ -23,8 +23,8 @@ private:
     Entry* table;
     int size;
     int num_elements;
-    const float load_factor = 0.8;
-    const int max_probing_limit = 1000;
+    float load_factor = 0.8;
+    int max_probing_limit = 1000;
 
     int hash(int key);
     int quadratic_probe(int key, int i);
