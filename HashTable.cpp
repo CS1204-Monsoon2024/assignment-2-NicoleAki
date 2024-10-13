@@ -5,7 +5,7 @@ using namespace std;
 
 class HashTable {
 public:
-    HashTable(int initial_size = 5);
+    HashTable(int initial_size = 7);
     ~HashTable();
 
     void insert(int key);
@@ -24,7 +24,7 @@ private:
     int size;
     int num_elements;
     const float load_factor = 0.8;
-    const int max_probing_limit = (size+1)/2;
+    const int max_probing_limit = 1000;
 
     int hash(int key);
     int quadratic_probe(int key, int i);
@@ -55,6 +55,7 @@ int HashTable::hash(int key) {
 
 int HashTable::quadratic_probe(int key, int i) {
     return (hash(key) + i * i) % size;  
+}
 
 bool HashTable::is_prime(int n) {
     if (n < 2) return false;
@@ -72,12 +73,12 @@ int HashTable::next_prime(int n) {
 }
 
 void HashTable::resize() {
-    int new_size = next_prime(size * 2);  
-    Entry* old_table = table;  // Store the old table
+    int new_size = next_prime(size * 2);  // Find the next prime number after doubling size
+    Entry* old_table = table;  
     int old_size = size;
     
     size = new_size;
-    table = new Entry[size];  // Allocate new table with updated size
+    table = new Entry[size];  
 
     for (int i = 0; i < size; ++i) {
         table[i].key = -1;
@@ -86,7 +87,7 @@ void HashTable::resize() {
     }
 
     int old_num_elements = num_elements;  
-    num_elements = 0; 
+    num_elements = 0;  
 
     // Rehash all the non-deleted keys from the old table
     for (int i = 0; i < old_size; ++i) {
@@ -105,7 +106,7 @@ void HashTable::insert(int key) {
     }
 
     if ((float)num_elements / size >= load_factor) {
-        resize();  
+        resize(); 
     }
 
     int i = 0;
@@ -129,10 +130,10 @@ int HashTable::search(int key) {
     while (i < size) {
         int index = quadratic_probe(key, i);
         if (table[index].is_empty) {
-            return -1;  // Key not found
+            return -1;  
         }
         if (table[index].key == key && !table[index].is_deleted) {
-            return index;  // Return index where key was found
+            return index;  
         }
         ++i;
     }
@@ -146,7 +147,7 @@ void HashTable::remove(int key) {
         return;
     }
 
-    table[index].is_deleted = true;  // Mark as deleted
+    table[index].is_deleted = true; 
     --num_elements;
 }
 
@@ -160,3 +161,5 @@ void HashTable::printTable() {
     }
     cout << endl;
 }
+
+

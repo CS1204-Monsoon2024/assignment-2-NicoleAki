@@ -3,15 +3,22 @@
         {
             "name": "windows-gcc-x64",
             "includePath": [
-                "${workspaceFolder}/**"
+                "c:/Users/NICOLE/Documents/GitHub/assignment-2-NicoleAki/**"
             ],
-            "cStandard": "${default}",
-            "cppStandard": "${default}",
             "intelliSenseMode": "windows-gcc-x64",
             "compilerArgs": [
                 ""
             ],
-            "compilerPath": "gcc"
+            "compilerPathInCppPropertiesJson": "gcc",
+            "mergeConfigurations": false,
+            "browse": {
+                "path": [
+                    "c:/Users/NICOLE/Documents/GitHub/assignment-2-NicoleAki/**",
+                    "${workspaceFolder}"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "compilerPath": "\"C:\\MinGW\\bin\""
         },
         {
             "name": "C:\\MinGW\\bin",
