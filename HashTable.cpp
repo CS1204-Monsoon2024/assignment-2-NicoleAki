@@ -92,24 +92,10 @@ void HashTable::resize() {
     // Rehash all the non-deleted keys from the old table
     for (int i = 0; i < old_size; ++i) {
         if (!old_table[i].is_empty && !old_table[i].is_deleted) {
-            int key = old_table[i].key;
-            int index = key % size;
-            if (table[index].key == -1){
-                table[index].key = key;
-                table[index].is_empty = false;
-                table[index].is_deleted = false;  
-            }
-            else{
-                for (int r = 0; r < max_probing_limit; ++r){
-                    index_2 = (index + r * r) % size;
-                    table[index_2].key = key;
-                    table[index_2].is_empty = false;
-                    table[index_2].is_deleted = false; }
-            } 
+            insert(old_table[i].key);  // Reinsert old keys
         }
     }
-
-    delete[] old_table;  
+   delete[] old_table;  
 }
 
 void HashTable::insert(int key) {
