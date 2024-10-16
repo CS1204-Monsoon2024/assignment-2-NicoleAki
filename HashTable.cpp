@@ -127,7 +127,7 @@ void HashTable::insert(int key) {
 
 int HashTable::search(int key) {
     int i = 0;
-    while (i < size) {
+    while (i < max_probing_limit) {
         int index = quadratic_probe(key, i);
         if (table[index].is_empty) {
             return -1;  
