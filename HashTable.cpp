@@ -28,7 +28,7 @@ private:
     bool is_prime(int n);
     int next_prime(int n);
     void resize();   // Function to resize and rehash the table
-   // Function to calculate the probing limit
+    int getMaxProbingLimit();  // Function to calculate the probing limit
 };
 
 HashTable::HashTable(int initial_size) {
@@ -71,6 +71,10 @@ int HashTable::next_prime(int n) {
     return n;
 }
 
+int HashTable::getMaxProbingLimit() {
+    // Calculate the max probing limit: (size + 1) / 2
+    return (size + 1) / 2;
+}
 
 void HashTable::resize() {
     int new_size = next_prime(size * 2);  // Resize to the next prime number
@@ -114,7 +118,7 @@ void HashTable::insert(int key) {
     }
 
     int i = 0;
-    int max_limit = (size + 1 /2);  // Get the new max probing limit
+    int max_limit = getMaxProbingLimit();  // Get the new max probing limit
     while (i < max_limit) {
         int index = quadratic_probe(key, i);
         if (table[index].is_empty || table[index].is_deleted) {
@@ -132,7 +136,7 @@ void HashTable::insert(int key) {
 
 int HashTable::search(int key) {
     int i = 0;
-    int max_limit = (size + 1 /2);  // Get the new max probing limit
+    int max_limit = getMaxProbingLimit();  // Get the new max probing limit
     while (i < max_limit) {
         int index = quadratic_probe(key, i);
         if (table[index].is_empty) {
@@ -167,4 +171,3 @@ void HashTable::printTable() {
     }
     std::cout << std::endl;
 }
-
