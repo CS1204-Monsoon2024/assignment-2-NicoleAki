@@ -24,7 +24,7 @@ private:
     int size;
     int num_elements;
     float load_factor = 0.8;
-    int max_probing_limit = (size + 1) / 2;
+    int max_probing_limit = 1000;
 
     int hash(int key);
     int quadratic_probe(int key, int i);
