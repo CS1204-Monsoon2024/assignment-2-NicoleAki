@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cmath>
 
+using namespace std;
+
 class HashTable {
 public:
     HashTable(int initial_size = 7);
@@ -10,7 +12,7 @@ public:
     void remove(int key);
     int search(int key);
     void printTable();
-
+    
 private:
     struct Entry {
         int key;
@@ -18,17 +20,17 @@ private:
         bool is_deleted;
     };
 
-    Entry* table;      // Array for storing hash entries
-    int size;          // Current size of the table
-    int num_elements;  // Current number of elements
+    Entry* table;
+    int size;
+    int num_elements;
     float load_factor = 0.8;
+    int max_probing_limit = 1000;
 
     int hash(int key);
     int quadratic_probe(int key, int i);
     bool is_prime(int n);
     int next_prime(int n);
-    void resize();   // Function to resize and rehash the table
-    int getMaxProbingLimit();  // Function to calculate the probing limit
+    void resize();
 };
 
 HashTable::HashTable(int initial_size) {
@@ -36,9 +38,8 @@ HashTable::HashTable(int initial_size) {
     table = new Entry[size];
     num_elements = 0;
 
-    // Initialize all table entries
     for (int i = 0; i < size; ++i) {
-        table[i].key = -1;  // -1 indicates empty
+        table[i].key = -1;
         table[i].is_empty = true;
         table[i].is_deleted = false;
     }
@@ -71,55 +72,44 @@ int HashTable::next_prime(int n) {
     return n;
 }
 
-int HashTable::getMaxProbingLimit() {
-    // Calculate the max probing limit: (size + 1) / 2
-    return (size + 1) / 2;
-}
-
 void HashTable::resize() {
-    int new_size = next_prime(size * 2);  // Resize to the next prime number
-    Entry* old_table = table;  // Store the old table
+    int new_size = next_prime(size * 2);  // Find the next prime number after doubling size
+    Entry* old_table = table;  
     int old_size = size;
-
-    // Create a new table with the new size
+    
     size = new_size;
-    table = new Entry[size];
+    table = new Entry[size];  
 
-    // Initialize new table entries
     for (int i = 0; i < size; ++i) {
         table[i].key = -1;
         table[i].is_empty = true;
         table[i].is_deleted = false;
     }
 
-    // Reset element count and rehash old elements into the new table
     int old_num_elements = num_elements;  
-    num_elements = 0;
+    num_elements = 0;  
 
+    // Rehash all the non-deleted keys from the old table
     for (int i = 0; i < old_size; ++i) {
         if (!old_table[i].is_empty && !old_table[i].is_deleted) {
-            insert(old_table[i].key);  // Rehash old keys
+            insert(old_table[i].key);  // Reinsert old keys
         }
     }
-
-    delete[] old_table;  // Free the memory of the old table
+   delete[] old_table;  
 }
 
 void HashTable::insert(int key) {
-    // Check for duplicate keys
     if (search(key) != -1) {
-        std::cout << "Duplicate key insertion is not allowed" << std::endl;
+        cout << "Duplicate key insertion is not allowed" << endl;
         return;
     }
 
-    // Resize table if load factor exceeds threshold
     if ((float)num_elements / size >= load_factor) {
-        resize();
+        resize(); 
     }
 
     int i = 0;
-    int max_limit = getMaxProbingLimit();  // Get the new max probing limit
-    while (i < max_limit) {
+    while (i < max_probing_limit) {
         int index = quadratic_probe(key, i);
         if (table[index].is_empty || table[index].is_deleted) {
             table[index].key = key;
@@ -131,43 +121,42 @@ void HashTable::insert(int key) {
         ++i;
     }
 
-    std::cout << "Max probing limit reached!" << std::endl;
+    cout << "Max probing limit reached!" << endl;
 }
 
 int HashTable::search(int key) {
     int i = 0;
-    int max_limit = getMaxProbingLimit();  // Get the new max probing limit
-    while (i < max_limit) {
+    while (i < max_probing_limit) {
         int index = quadratic_probe(key, i);
         if (table[index].is_empty) {
-            return -1;  // Key not found
+            return -1;  
         }
         if (table[index].key == key && !table[index].is_deleted) {
-            return index;  // Key found
+            return index;  
         }
         ++i;
     }
-    return -1;  // Key not found after max probing
+    return -1;
 }
 
 void HashTable::remove(int key) {
     int index = search(key);
     if (index == -1) {
-        std::cout << "Element not found" << std::endl;
+        cout << "Element not found" << endl;
         return;
     }
 
-    table[index].is_deleted = true;  // Mark the slot as deleted
+    table[index].is_deleted = true; 
     --num_elements;
 }
 
 void HashTable::printTable() {
     for (int i = 0; i < size; ++i) {
         if (table[i].is_empty || table[i].is_deleted) {
-            std::cout << "- ";
+            cout << "- ";
         } else {
-            std::cout << table[i].key << " ";
+            cout << table[i].key << " ";
         }
     }
-    std::cout << std::endl;
+    cout << endl;
 }
